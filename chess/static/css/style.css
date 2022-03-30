@@ -1,9 +1,28 @@
-body {
-    min-height: 100vh;
+div.board-row {
+    display: flex;
+    align-content: center;
+    flex-direction: row;
 }
 
-div.footer {
-    position: absolute;
-    left: 0;
-    bottom: 0
+div.square {
+    border: 1px solid black;
+    margin: 0;
+    padding: 25px;
+    text-align: center;
+}
+
+div.square:hover {
+    filter: contrast(600%);
+}
+
+div.square.light {
+    background-color: orange;
+}
+
+div.square.dark {
+    background-color: orangered;
+}
+
+div.square.chosen {
+    background-color: blue;
 }
