@@ -1,0 +1,20 @@
+{% extends '../layout/base.html' %}
+
+{% block main %}
+<div class="container">
+    <h1>Chess Pieces</h1>
+    <h4>Register and list</h4>
+    <hr />
+    <form class="piece-register" action="{% url 'register_piece' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" name="name" class="form-control" placeholder="Piece name" />
+            <input type="text" name="color" class="form-control" placeholder="Piece color" />
+            <span class="input-group-append">
+                <input type="submit" value="Send" class="form-control" />
+            </span>
+        </div>
+    </form>
+    <div class="pieces-list"></div>
+</div>
+{% endblock main %}

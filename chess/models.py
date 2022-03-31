@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
+class Pieces(models.Model):
+    name = models.CharField(max_length=24)
+    color = models.CharField(max_length=16)
