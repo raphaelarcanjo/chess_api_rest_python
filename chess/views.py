@@ -32,8 +32,8 @@ def list_pieces(request):
 
 def register_piece(request):
     data = {
-        'title': "Pieces"
+        'title': "Pieces",
         }
     if request.method == 'POST':
-        return print(request.POST.get('name'))
+        return render_to_string('pieces/list.html', data)
     return render(request, 'pieces/register.html', data)
