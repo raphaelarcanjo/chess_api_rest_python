@@ -1,5 +1,10 @@
-<ul class="pieces-list">
+<ul class="nav flex-column pieces-list">
     {% for piece in pieces %}
-    <li>{{ piece.id }} - {{ piece.name }} - {{ piece.color }}</li>
+    <li class="nav-item py-1">
+        <button class="btn btn-danger btn-sm me-1 delete" data-id="{{ piece.id }}" onclick="delete_piece($(this))">
+            Delete
+        </button>
+        {{ piece.id }} - {{ piece.name }} - {{ piece.color }}
+    </li>
     {% endfor %}
 </ul>

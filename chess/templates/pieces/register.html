@@ -8,13 +8,19 @@
     <form class="piece-register" action="{% url 'register_piece' %}" method="post">
         {% csrf_token %}
         <div class="input-group">
+            <span class="input-group-text">New piece</span>
             <input type="text" name="name" class="form-control" placeholder="Piece name" />
             <input type="text" name="color" class="form-control" placeholder="Piece color" />
-            <span class="input-group-append">
-                <input type="submit" value="Send" class="form-control" />
-            </span>
+            <input type="submit" value="Send" class="form-control btn btn-dark" />
         </div>
     </form>
+    <hr />
     <div class="pieces-list"></div>
 </div>
 {% endblock main %}
+
+{% block scripts %}
+<script type="text/javascript">
+    list_pieces();
+</script>
+{% endblock scripts %}
