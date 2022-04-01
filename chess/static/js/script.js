@@ -1,13 +1,25 @@
-const register_pieces = form => {
+const save_pieces = form => {
+    let piece_id = $(form).find('input[name=id]').val()
+    let url = piece_id != '' ? '/pieces/save/' + piece_id : '/pieces/save'
     $.ajax({
-        url: '/pieces/register',
+        url,
         type: 'post',
         data: $(form).serialize(),
         success: function(json) {
-            if (json.status) list_pieces()
+            if (json.status) {
+                clear_fields()
+                list_pieces()
+            }
             else alert('Error saving the piece')
         }
     })
+}
+
+const update_piece = btn => {
+    let form = $('form.piece-register')
+    $(form).find('input[name=id]').val($(btn).data('piece-id'))
+    $(form).find('input[name=name]').val($(btn).data('piece-name')).focus()
+    $(form).find('input[name=color]').val($(btn).data('piece-color'))
 }
 
 const list_pieces = () => {
@@ -22,9 +34,9 @@ const list_pieces = () => {
 const delete_piece = btn => {
     if (confirm('Are you sure you want delete this piece?')) {
         $.ajax({
-            url: '/pieces/delete/',
+            url: '/pieces/delete/' + $(btn).data('id'),
             type: 'post',
-            data: {id: $(btn).data('id'), csrfmiddlewaretoken: $('form.piece-register').find('input[name=csrfmiddlewaretoken]').val()},
+            data: {csrfmiddlewaretoken: $('form.piece-register').find('input[name=csrfmiddlewaretoken]').val()},
             success: function (json) {
                 if (json.status) $(btn).closest('li').remove()
             }
@@ -32,7 +44,11 @@ const delete_piece = btn => {
     }
 }
 
+const clear_fields = () => {
+    $('form.piece-register input[name=name], form.piece-register input[name=id], form.piece-register input[name=color]').val('')
+}
+
 $('form.piece-register').on('submit', function(e) {
-    register_pieces($(this))
+    save_pieces($(this))
     e.preventDefault()
 })

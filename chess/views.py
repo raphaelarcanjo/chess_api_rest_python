@@ -4,45 +4,48 @@ from chess.models import Pieces
 from django.http import HttpResponse, JsonResponse
 
 
-def home(request):
-    data = {'title': "Home"}
+class IndexView:
+    def home(request):
+        data = {'title': "Home"}
 
-    return render(request, 'home.html', data)
+        return render(request, 'home.html', data)
 
+    def about(request):
+        data = {'title': "About"}
 
-def about(request):
-    data = {'title': "About"}
-
-    return render(request, 'about.html', data)
-
-
-def list_pieces(request):
-    pieces = Pieces.objects.all()
-    data = {'pieces': pieces}
-    html = render_to_string('pieces/list.html', data)
-
-    return HttpResponse(html)
+        return render(request, 'about.html', data)
 
 
-def register_piece(request):
-    data = {'title': "Pieces"}
+class PiecesView:
+    def list(request, id=None):
+        pieces = [Pieces.objects.get(id=id)] if id else Pieces.objects.all()
+        data = {'pieces': pieces}
+        html = render_to_string('pieces/list.html', data)
 
-    if request.method == 'POST':
-        piece = Pieces()
-        piece.name = request.POST['name']
-        piece.color = request.POST['color']
-        piece.save()
-        status = True if piece.id else False
+        return HttpResponse(html)
 
-        return JsonResponse({'status': status})
+    def register(request):
+        data = {'title': "Pieces"}
 
-    return render(request, 'pieces/register.html', data)
+        return render(request, 'pieces/register.html', data)
 
+    def save(request, id=None):
+        if request.method == 'POST':
+            piece = Pieces.objects.get(id=id) if id else Pieces()
+            piece.name = request.POST['name']
+            piece.color = request.POST['color']
+            piece.save()
+            status = True if piece.id else False
 
-def delete_piece(request):
-    try:
-        Pieces.objects.get(id=request.POST['id']).delete()
+            return JsonResponse({'status': status})
 
-        return JsonResponse({'status': True})
-    except Exception:
-        return JsonResponse({'status': False})
+    def delete(request, id=None):
+        try:
+            if id:
+                Pieces.objects.get(id=id).delete()
+            else:
+                Pieces.objects.all().delete()
+
+            return JsonResponse({'status': True})
+        except Exception:
+            return JsonResponse({'status': False})

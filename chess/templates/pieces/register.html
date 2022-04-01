@@ -7,6 +7,7 @@
     <hr />
     <form class="piece-register" action="{% url 'register_piece' %}" method="post">
         {% csrf_token %}
+        <input type="hidden" name="id">
         <div class="input-group">
             <span class="input-group-text">New piece</span>
             <input type="text" name="name" class="form-control" placeholder="Piece name" />

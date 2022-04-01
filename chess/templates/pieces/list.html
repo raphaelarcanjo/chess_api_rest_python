@@ -1,9 +1,14 @@
 <ul class="nav flex-column pieces-list">
     {% for piece in pieces %}
     <li class="nav-item py-1">
-        <button class="btn btn-danger btn-sm me-1 delete" data-id="{{ piece.id }}" onclick="delete_piece($(this))">
-            Delete
-        </button>
+        <div class="btn-group btn-group-sm me-1">
+            <button class="btn btn-danger btn-sm delete" data-id="{{ piece.id }}" onclick="delete_piece($(this))">
+                Delete
+            </button>
+            <button class="btn btn-primary btn-sm edit" data-piece-id="{{ piece.id }}" data-piece-name="{{ piece.name }}" data-piece-color="{{ piece.color }}" onclick="update_piece($(this))">
+                Edit
+            </button>
+        </div>
         {{ piece.id }} - {{ piece.name }} - {{ piece.color }}
     </li>
     {% endfor %}
