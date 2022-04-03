@@ -6,11 +6,13 @@ from django.http import HttpResponse, JsonResponse
 
 class IndexView:
     def home(request):
-        pieces = Pieces.objects.all()
+        colors = Pieces.objects.values('color').distinct()
+        names = Pieces.objects.values('name').distinct()
 
         data = {
             'title': "Home",
-            'pieces': pieces
+            'colors': colors,
+            'names': names,
             }
 
         return render(request, 'home.html', data)

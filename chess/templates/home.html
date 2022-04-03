@@ -12,7 +12,7 @@
                 <span class="h4">-</span>
             </button>
 
-            <input type="number" min="0" class="form-control" id="number_rows">
+            <input type="number" min="1" class="form-control" id="number_rows">
 
             <div class="input-group-text">rows</div>
 
@@ -26,7 +26,7 @@
                 <span class="h4">-</span>
             </button>
 
-            <input type="number" min="0" class="form-control" id="number_columns">
+            <input type="number" min="1" class="form-control" id="number_columns">
 
             <div class="input-group-text">columns</div>
 
@@ -36,25 +36,22 @@
         </div>
 
         <div class="col">
-            <select id="pieces-list" class="form-select">
-                {% if pieces %}
-                    <optgroup label="_____white_____">
-                        {% for piece in pieces %}
-                            {% if piece.color == "white" %}
-                                <option value="{{ piece.id }}">{{ piece.name }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
+            <div class="input-group">
+                <div class="input-group-text">Piece</div>
+                <select id="names-list" class="form-select">
+                    {% for name in names %}
+                    <option value="{{ name.name }}">{{ name.name }}</option>
+                    {% endfor %}
+                </select>
 
-                    <optgroup label="_____black_____">
-                        {% for piece in pieces %}
-                            {% if piece.color == "black" %}
-                                <option value="{{ piece.id }}">{{ piece.name }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                {% endif %}
-            </select>
+                <select id="colors-list" class="form-select">
+                    {% for color in colors %}
+                    <option value="{{ color.color }}">{{ color.color }}</option>
+                    {% endfor %}
+                </select>
+
+                <button class="btn btn-dark">Get ID</button>
+            </div>
         </div>
     </div>
 
