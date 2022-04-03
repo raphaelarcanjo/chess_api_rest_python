@@ -30,3 +30,17 @@ div.square.dark {
 div.square.chosen {
     background-color: blue;
 }
+
+ul.coordinates li {
+    margin: 0;
+    padding: 0;
+    padding-top: 8px;
+    width: 52px;
+    height: 52px;
+    border: 1px solid transparent;
+    text-align: center;
+}
+
+ul.column-coordinates li:first-of-type {
+    margin-left: 52px;
+}

@@ -5,6 +5,65 @@
     <h1>Chess Board</h1>
     <h4>Finding out knight moves</h4>
     <hr />
-    <div class="chess-board"></div>
+
+    <div class="row align-content-between mb-3">
+        <div class="input-group input-group-sm col">
+            <button class="btn btn-danger remove-row text-white">
+                <span class="h4">-</span>
+            </button>
+
+            <input type="number" min="0" class="form-control" id="number_rows">
+
+            <div class="input-group-text">rows</div>
+
+            <button class="btn btn-success add-row text-white">
+                <span class="h4">+</span>
+            </button>
+        </div>
+
+        <div class="input-group input-group-sm col">
+            <button class="btn btn-danger remove-column text-white">
+                <span class="h4">-</span>
+            </button>
+
+            <input type="number" min="0" class="form-control" id="number_columns">
+
+            <div class="input-group-text">columns</div>
+
+            <button class="btn btn-success add-column text-white">
+                <span class="h4">+</span>
+            </button>
+        </div>
+
+        <div class="col">
+            <select id="pieces-list" class="form-select">
+                {% if pieces %}
+                    <optgroup label="_____white_____">
+                        {% for piece in pieces %}
+                            {% if piece.color == "white" %}
+                                <option value="{{ piece.id }}">{{ piece.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+
+                    <optgroup label="_____black_____">
+                        {% for piece in pieces %}
+                            {% if piece.color == "black" %}
+                                <option value="{{ piece.id }}">{{ piece.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                {% endif %}
+            </select>
+        </div>
+    </div>
+
+    <div class="chess-board text-center d-flex">
+        <ul class="coordinates row-coordinates nav flex-column"></ul>
+
+        <div class="content"></div>
+    </div>
+
+    <ul class="coordinates column-coordinates nav"></ul>
 </div>
 {% endblock main %}
