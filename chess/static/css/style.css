@@ -2,6 +2,11 @@ main {
     min-height: 100vh;
 }
 
+div.moves-history {
+    height: 400px;
+    overflow-y: scroll;
+}
+
 div.board-row {
     display: flex;
     align-content: center;

@@ -40,6 +40,33 @@ def list_moves(coordinates, alfabet):
     return moves
 
 
+def save_history(field, coordinates, piece):
+    history = MovesHistory()
+    history.field = field
+    history.coordinates = coordinates
+    history.piece = piece
+    history.save()
+
+    return history.id
+
+
+def list_history(request):
+    history = MovesHistory.objects.values().order_by('-id')
+
+    for item in history:
+        parsed_json = json.loads(item['coordinates'])
+        fixed_list = []
+        for coord in parsed_json:
+            fixed_item = [str(coord[0]), coord[1]]
+            fixed_list.append(''.join(fixed_item))
+        item['coordinates'] = ', '.join(fixed_list)
+
+    data = {'history': history}
+    html = render_to_string('history/list.html', data)
+
+    return HttpResponse(html)
+
+
 class PiecesView:
     def list(request, id=None):
         pieces = [Pieces.objects.get(id=id)] if id else Pieces.objects.all()
@@ -113,11 +140,10 @@ class PiecesView:
                 [row, col],
                 alfabet)
 
-            # history = MovesHistory()
-            # history.field = ''.join([row, col])
-            # history.coordinates = json.dumps(moves)
-            # history.piece = piece
-            # history.save()
+            save_history(
+                ''.join([str(row), col]),
+                json.dumps(moves),
+                piece)
         else:
             error = 'Piece not found or this piece is not a "knight"'
             moves = []

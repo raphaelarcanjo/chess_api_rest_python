@@ -4,9 +4,12 @@ const alfabet = "abcdefghijklmnopqrstuvwxyz"
 let col = 0
 let row = 0
 let moves = []
+let last_field = ""
 
 const show_moves = () => {
     $('div.square.selected').removeClass('selected')
+
+    // SELECT THE POSSIBLE MOVES
     $(moves).each(function() {
         let row_index = $(this)[0] - 1
         let column_index = alfabet.indexOf($(this)[1])
@@ -15,6 +18,17 @@ const show_moves = () => {
             $(board_row).find('div.square').eq(column_index).addClass('selected')
         }
     })
+
+    // SELECT THE ORIGIN (THE INFORMED COORDINATE)
+    let origin = $('form.get-knight-moves input.coordinates').val()
+    if (origin) last_field = origin
+    let row_index = last_field.substring(0, last_field.length - 1) - 1
+    let column_index = alfabet.indexOf(last_field[last_field.length - 1])
+    let board_row = $($('div.chess-board').find('div.board-row').get().reverse()).eq(row_index)
+    $(board_row).find('div.square').eq(column_index).addClass('clicked')
+
+    // CLEAR FIELDS
+    $('form.get-knight-moves input.coordinates, form.get-knight-moves input.piece-id').val('')
 }
 
 const render_board = () => {
@@ -63,7 +77,7 @@ const render_board = () => {
         send_coordinates($(this))
     })
 
-    show_moves()
+    if (moves.length > 0) show_moves()
 }
 
 const add_row = (number = 1) => {
@@ -168,12 +182,24 @@ const get_knight_moves = form => {
             if (!json.error) {
                 moves = json.moves
                 show_moves()
+                get_history()
             }
             else $('p.comments').removeClass('invisible').text(json.error)
         }
     })
 }
 
+// HISTORY FUNCTIONS
+const get_history = () => {
+    $.ajax({
+        url: '/history',
+        success: function(html) {
+            $('div.moves-history').html(html)
+        }
+    })
+}
+
+// EVENTS REGISTER
 $('form.piece-register').on('submit', function(e) {
     save_pieces($(this))
     e.preventDefault()
@@ -222,3 +248,6 @@ $('input#number_columns').on('keyup', function() {
     col = $(this).val()
     render_board()
 })
+
+$('form.get-knight-moves input.coordinates, form.get-knight-moves input.piece-id').val('')
+get_history()

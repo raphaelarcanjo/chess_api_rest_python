@@ -1,5 +1,5 @@
 from django.urls import path
-from chess.views import IndexView, PiecesView
+from chess.views import IndexView, PiecesView, list_history
 
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('pieces/get_id', PiecesView.get_id, name='get_piece_id'),
     path('pieces/get_knight_moves',
          PiecesView.get_knight_moves, name='get_knight_moves'),
+    path('history', list_history, name='list_history')
     ]
