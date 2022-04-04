@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from chess.models import Pieces
+from chess.models import Pieces, MovesHistory
 from django.http import HttpResponse, JsonResponse
+import json
 
 
 class IndexView:
@@ -23,9 +24,9 @@ class IndexView:
         return render(request, 'about.html', data)
 
 
-def list_moves(coordinates):
+def list_moves(coordinates, alfabet):
     moves = []
-    alfabet, row, col = coordinates
+    row, col = coordinates
     col = alfabet.index(col)
     moves.append([(row - 1), (alfabet[col - 2])])
     moves.append([(row + 1), (alfabet[col - 2])])
@@ -108,7 +109,15 @@ class PiecesView:
                 })
         if piece and piece.name == 'knight':
             error = ''
-            moves = list_moves([alfabet, row, col])
+            moves = list_moves(
+                [row, col],
+                alfabet)
+
+            # history = MovesHistory()
+            # history.field = ''.join([row, col])
+            # history.coordinates = json.dumps(moves)
+            # history.piece = piece
+            # history.save()
         else:
             error = 'Piece not found or this piece is not a "knight"'
             moves = []

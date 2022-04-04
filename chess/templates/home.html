@@ -80,14 +80,27 @@
 
     <hr />
 
-    <h4 class="alert alert-info">Click on any square to select coordinates</h4>
+    <div class="row">
+        <div class="col">
+            <h4 class="alert alert-info">Click on any square to select coordinates</h4>
 
-    <div class="chess-board text-center d-flex">
-        <ul class="coordinates row-coordinates nav flex-column"></ul>
+            <div class="chess-board text-center d-flex">
+                <ul class="coordinates row-coordinates nav flex-column"></ul>
 
-        <div class="content"></div>
+                <div class="content"></div>
+            </div>
+
+            <ul class="coordinates column-coordinates nav"></ul>
+        </div>
+
+        <div class="col">
+            <h4>Moves history</h4>
+            <hr />
+
+            <div class="nav flex-column">
+                <ul class="moves-history"></ul>
+            </div>
+        </div>
     </div>
-
-    <ul class="coordinates column-coordinates nav"></ul>
 </div>
 {% endblock main %}

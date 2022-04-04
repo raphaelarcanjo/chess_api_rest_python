@@ -5,6 +5,18 @@ let col = 0
 let row = 0
 let moves = []
 
+const show_moves = () => {
+    $('div.square.selected').removeClass('selected')
+    $(moves).each(function() {
+        let row_index = $(this)[0] - 1
+        let column_index = alfabet.indexOf($(this)[1])
+        if (row_index >= 1 && column_index >= 0 && (column_index + 1) <= col && (row_index + 1) <= row) {
+            let board_row = $($('div.chess-board').find('div.board-row').get().reverse()).eq(row_index)
+            $(board_row).find('div.square').eq(column_index).addClass('selected')
+        }
+    })
+}
+
 const render_board = () => {
     let board_content = $('<div>')
     let color = true
@@ -50,6 +62,8 @@ const render_board = () => {
         $(this).addClass('clicked')
         send_coordinates($(this))
     })
+
+    show_moves()
 }
 
 const add_row = (number = 1) => {
@@ -156,18 +170,6 @@ const get_knight_moves = form => {
                 show_moves()
             }
             else $('p.comments').removeClass('invisible').text(json.error)
-        }
-    })
-}
-
-const show_moves = () => {
-    $('div.square.selected').removeClass('selected')
-    $(moves).each(function() {
-        let row_index = $(this)[0] - 1
-        let column_index = alfabet.indexOf($(this)[1])
-        if (row_index >= 1 && column_index >= 0 && (column_index + 1) <= col && (row_index + 1) <= row) {
-            let board_row = $($('div.chess-board').find('div.board-row').get().reverse()).eq(row_index)
-            $(board_row).find('div.square').eq(column_index).addClass('selected')
         }
     })
 }
