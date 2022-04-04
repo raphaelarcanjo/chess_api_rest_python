@@ -1,8 +1,9 @@
 // CHESS TABLE FUNCTIONS
 const alfabet = "abcdefghijklmnopqrstuvwxyz"
 
-let col = []
+let col = 0
 let row = 0
+let moves = []
 
 const render_board = () => {
     let board_content = $('<div>')
@@ -13,7 +14,7 @@ const render_board = () => {
     let coord_col = $('<div>')
 
     // COLUMN RENDERING
-    for(i = 0; i < col.length; i++) {
+    for(i = 0; i < col; i++) {
         let new_square = square.clone()
         if (color) new_square.addClass("dark")
         else new_square.addClass("light")
@@ -40,22 +41,24 @@ const render_board = () => {
     $('ul.coordinates.column-coordinates').html(coord_col.html())
     $('ul.coordinates.row-coordinates').html(coord_row.html())
     $('input#number_rows').val(row)
-    $('input#number_columns').val(col.length)
+    $('input#number_columns').val(col)
 
     // CREATE EVENT LISTENER FOR THE SQUARES
     $('div.square').on('click', function() {
+        $('div.square.clicked').removeClass('clicked')
+        $('div.square.selected').removeClass('selected')
+        $(this).addClass('clicked')
         send_coordinates($(this))
     })
 }
 
 const add_row = (number = 1) => {
     row += number
-    $('input#number_rows').val(row)
 }
 
 const add_column = (number = 1) => {
-    if (number + col.length > alfabet.length) col = alfabet.split('')
-    else col = alfabet.slice(0, col.length + number).split('')
+    if (number + col > alfabet.length) col = alfabet.length
+    else col += number
 }
 
 const remove_row = (number = 1) => {
@@ -63,17 +66,13 @@ const remove_row = (number = 1) => {
 }
 
 const remove_column = (number = 1) => {
-    if (col.length > 1) {
-        for(i = 0; i < number; i++) {
-            col.pop()
-        }
-    }
+    if (col > 1) col -= number
 }
 
 const send_coordinates = div_square => {
     let row = $(div_square).closest('div.board-row')
     let coordinates = [$(row).data('coordinate'), alfabet[$(row).find(div_square).index()]]
-    console.log(coordinates)
+    $('form.get-knight-moves input.coordinates').val(coordinates.join(''))
 }
 
 add_column(8)
@@ -131,6 +130,48 @@ const clear_fields = () => {
     $('form.piece-register input[name=name], form.piece-register input[name=id], form.piece-register input[name=color]').val('')
 }
 
+const get_piece_id = form => {
+    $('p.comments').addClass('invisible')
+    $.ajax({
+        url: '/pieces/get_id',
+        data: $(form).serialize(),
+        success: function (json) {
+            if (!json.error) {
+                $('p.comments').text('The selected piece ID is: ' + json.piece.id).removeClass('invisible')
+                $('form.get-knight-moves input.piece-id').val(json.piece.id).focus()
+            }
+            else $('p.comments').removeClass('invisible').text(json.error)
+        }
+    })
+}
+
+const get_knight_moves = form => {
+    $('p.comments').addClass('invisible')
+    $.ajax({
+        url: '/pieces/get_knight_moves',
+        data: $(form).serialize() + '&csrfmiddlewaretoken=' + $('input[name=csrfmiddlewaretoken]').val(),
+        success: function (json) {
+            if (!json.error) {
+                moves = json.moves
+                show_moves()
+            }
+            else $('p.comments').removeClass('invisible').text(json.error)
+        }
+    })
+}
+
+const show_moves = () => {
+    $('div.square.selected').removeClass('selected')
+    $(moves).each(function() {
+        let row_index = $(this)[0] - 1
+        let column_index = alfabet.indexOf($(this)[1])
+        if (row_index >= 1 && column_index >= 0 && (column_index + 1) <= col && (row_index + 1) <= row) {
+            let board_row = $($('div.chess-board').find('div.board-row').get().reverse()).eq(row_index)
+            $(board_row).find('div.square').eq(column_index).addClass('selected')
+        }
+    })
+}
+
 $('form.piece-register').on('submit', function(e) {
     save_pieces($(this))
     e.preventDefault()
@@ -153,5 +194,29 @@ $('button.remove-row').on('click', function() {
 
 $('button.remove-column').on('click', function() {
     remove_column()
+    render_board()
+})
+
+$('form.get-piece-id').on('submit', function(e) {
+    get_piece_id($(this))
+    e.preventDefault()
+})
+
+$('form.get-knight-moves').on('submit', function(e) {
+    get_knight_moves($(this))
+    e.preventDefault()
+})
+
+$('form.get-knight-moves input.piece-id').on('keyup', function() {
+    $('p.comments').text('The selected piece ID is: ' + $(this).val()).removeClass('invisible')
+})
+
+$('input#number_rows').on('keyup', function() {
+    row = $(this).val()
+    render_board()
+})
+
+$('input#number_columns').on('keyup', function() {
+    col = $(this).val()
     render_board()
 })

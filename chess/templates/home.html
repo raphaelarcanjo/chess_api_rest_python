@@ -6,54 +6,81 @@
     <h4>Finding out knight moves</h4>
     <hr />
 
-    <div class="row align-content-between mb-3">
-        <div class="input-group input-group-sm col">
-            <button class="btn btn-danger remove-row text-white">
-                <span class="h4">-</span>
-            </button>
+    <div class="row mb-3">
+        <div class="row col">
+            <div class="input-group input-group-sm col">
+                <button class="btn btn-danger remove-row text-white">
+                    <span class="h4">-</span>
+                </button>
 
-            <input type="number" min="1" class="form-control" id="number_rows">
+                <input type="number" min="1" class="form-control" id="number_rows">
 
-            <div class="input-group-text">rows</div>
+                <div class="input-group-text">rows</div>
 
-            <button class="btn btn-success add-row text-white">
-                <span class="h4">+</span>
-            </button>
-        </div>
+                <button class="btn btn-success add-row text-white">
+                    <span class="h4">+</span>
+                </button>
+            </div>
 
-        <div class="input-group input-group-sm col">
-            <button class="btn btn-danger remove-column text-white">
-                <span class="h4">-</span>
-            </button>
+            <div class="input-group input-group-sm col">
+                <button class="btn btn-danger remove-column text-white">
+                    <span class="h4">-</span>
+                </button>
 
-            <input type="number" min="1" class="form-control" id="number_columns">
+                <input type="number" min="1" class="form-control" id="number_columns">
 
-            <div class="input-group-text">columns</div>
+                <div class="input-group-text">columns</div>
 
-            <button class="btn btn-success add-column text-white">
-                <span class="h4">+</span>
-            </button>
+                <button class="btn btn-success add-column text-white">
+                    <span class="h4">+</span>
+                </button>
+            </div>
         </div>
 
         <div class="col">
-            <div class="input-group">
-                <div class="input-group-text">Piece</div>
-                <select id="names-list" class="form-select">
-                    {% for name in names %}
-                    <option value="{{ name.name }}">{{ name.name }}</option>
-                    {% endfor %}
-                </select>
+            <form class="get-piece-id">
+                {% csrf_token %}
+                <div class="input-group">
+                    <div class="input-group-text">Piece</div>
+                    <select id="names-list" class="form-select" name="name">
+                        {% for name in names %}
+                        <option value="{{ name.name }}">{{ name.name }}</option>
+                        {% endfor %}
+                    </select>
 
-                <select id="colors-list" class="form-select">
-                    {% for color in colors %}
-                    <option value="{{ color.color }}">{{ color.color }}</option>
-                    {% endfor %}
-                </select>
+                    <select id="colors-list" class="form-select" name="color">
+                        {% for color in colors %}
+                        <option value="{{ color.color }}">{{ color.color }}</option>
+                        {% endfor %}
+                    </select>
 
-                <button class="btn btn-dark">Get ID</button>
-            </div>
+                    <button class="btn btn-primary">Get ID</button>
+                </div>
+            </form>
         </div>
     </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <p class="comments alert alert-warning invisible"></p>
+        </div>
+
+        <div class="col">
+            <form class="get-knight-moves">
+                <div class="input-group">
+                    <span class="input-group-text">Coordinates</span>
+                    <input type="text" class="form-control coordinates" maxlength="2" name="coordinates" />
+                    <span class="input-group-text">Piece ID</span>
+                    <input type="text" class="form-control piece-id" name="piece_id" />
+                    <input type="submit" value="Get knight moves" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr />
+
+    <h4 class="alert alert-info">Click on any square to select coordinates</h4>
 
     <div class="chess-board text-center d-flex">
         <ul class="coordinates row-coordinates nav flex-column"></ul>

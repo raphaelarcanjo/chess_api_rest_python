@@ -27,8 +27,12 @@ div.square.dark {
     background-color: orangered;
 }
 
-div.square.chosen {
+div.square.clicked {
     background-color: blue;
+}
+
+div.square.selected {
+    background-color: lightblue;
 }
 
 ul.coordinates li {

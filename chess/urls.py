@@ -11,5 +11,8 @@ urlpatterns = [
     path('pieces/delete', PiecesView.delete, name='delete_piece'),
     path('pieces/delete/<int:id>', PiecesView.delete, name='delete_piece'),
     path('pieces', PiecesView.list, name='list_pieces'),
-    path('pieces/<int:id>', PiecesView.list, name='list_pieces')
+    path('pieces/<int:id>', PiecesView.list, name='list_pieces'),
+    path('pieces/get_id', PiecesView.get_id, name='get_piece_id'),
+    path('pieces/get_knight_moves',
+         PiecesView.get_knight_moves, name='get_knight_moves'),
     ]

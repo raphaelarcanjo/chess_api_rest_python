@@ -23,6 +23,22 @@ class IndexView:
         return render(request, 'about.html', data)
 
 
+def list_moves(coordinates):
+    moves = []
+    alfabet, row, col = coordinates
+    col = alfabet.index(col)
+    moves.append([(row - 1), (alfabet[col - 2])])
+    moves.append([(row + 1), (alfabet[col - 2])])
+    moves.append([(row - 1), (alfabet[col + 2])])
+    moves.append([(row - 2), (alfabet[col - 1])])
+    moves.append([(row - 2), (alfabet[col + 1])])
+    moves.append([(row + 2), (alfabet[col - 1])])
+    moves.append([(row + 2), (alfabet[col + 1])])
+    moves.append([(row + 1), (alfabet[col + 2])])
+
+    return moves
+
+
 class PiecesView:
     def list(request, id=None):
         pieces = [Pieces.objects.get(id=id)] if id else Pieces.objects.all()
@@ -39,8 +55,8 @@ class PiecesView:
     def save(request, id=None):
         if request.method == 'POST':
             piece = Pieces.objects.get(id=id) if id else Pieces()
-            piece.name = request.POST['name']
-            piece.color = request.POST['color']
+            piece.name = request.POST['name'].lower()
+            piece.color = request.POST['color'].lower()
             piece.save()
             status = True if piece.id else False
 
@@ -56,3 +72,47 @@ class PiecesView:
             return JsonResponse({'status': True})
         except Exception:
             return JsonResponse({'status': False})
+
+    def get_id(request):
+        try:
+            name = request.GET['name'].lower()
+            color = request.GET['color'].lower()
+            piece = Pieces.objects.filter(name=name, color=color).values()
+            piece = list(piece)[0]
+            error = ''
+        except IndexError:
+            error = "Piece not found!"
+            piece = []
+        return JsonResponse({
+            'error': error,
+            'piece': piece
+            })
+
+    def get_knight_moves(request):
+        alfabet = "abcdefghijklmnopqrstuvwxyz"
+        moves = []
+
+        try:
+            row, col = [i for i in request.GET['coordinates']]
+            row = int(row)
+        except ValueError:
+            return JsonResponse({
+                'error': 'Wrong coordinates format or empty coordinates',
+                'moves': moves
+                })
+        try:
+            piece = Pieces.objects.get(id=request.GET['piece_id'])
+        except ValueError:
+            return JsonResponse({
+                'error': 'Empty piece ID', 'moves': moves
+                })
+        if piece and piece.name == 'knight':
+            error = ''
+            moves = list_moves([alfabet, row, col])
+        else:
+            error = 'Piece not found or this piece is not a "knight"'
+            moves = []
+        return JsonResponse({
+            'error': error,
+            'moves': moves
+            })
