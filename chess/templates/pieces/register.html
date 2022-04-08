@@ -7,7 +7,6 @@
     <hr />
     <p class="alert alert-danger h4">For this test to work it is mandatory to register at least a piece called "knight"</p>
     <form class="piece-register" action="{% url 'register_piece' %}" method="post">
-        {% csrf_token %}
         <input type="hidden" name="id">
         <div class="input-group">
             <span class="input-group-text">Piece</span>

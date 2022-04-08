@@ -146,7 +146,6 @@ const delete_piece = btn => {
         $.ajax({
             url: '/pieces/delete/' + $(btn).data('id'),
             type: 'post',
-            data: {csrfmiddlewaretoken: $('form.piece-register').find('input[name=csrfmiddlewaretoken]').val()},
             success: function (json) {
                 if (json.status) $(btn).closest('li').remove()
             }
@@ -177,7 +176,7 @@ const get_knight_moves = form => {
     $('p.comments').addClass('invisible')
     $.ajax({
         url: '/pieces/get_knight_moves',
-        data: $(form).serialize() + '&csrfmiddlewaretoken=' + $('input[name=csrfmiddlewaretoken]').val(),
+        data: $(form).serialize(),
         success: function (json) {
             if (!json.error) {
                 moves = json.moves

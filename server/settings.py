@@ -130,4 +130,4 @@ MESSAGE_TAGS = {
     messages.WARNING: 'label label-warning',
     messages.INFO: 'label label-info',
     messages.DEBUG: 'label label-secondary'
-    }
+}
