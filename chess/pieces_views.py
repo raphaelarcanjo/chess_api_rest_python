@@ -8,7 +8,7 @@ import json
 
 class PiecesView:
     @csrf_exempt
-    def list(self, id=None):
+    def list(self, request, id=None):
         pieces = [Pieces.objects.get(id=id)] if id else Pieces.objects.all()
         data = {'pieces': pieces}
         html = render_to_string('pieces/list.html', data)
@@ -22,7 +22,7 @@ class PiecesView:
         return render(request, 'pieces/register.html', data)
 
     @csrf_exempt
-    def save(self, id=None):
+    def save(self, request, id=None):
         if request.method == 'POST':
             piece = Pieces.objects.get(id=id) if id else Pieces()
             piece.name = request.POST['name'].lower()
@@ -33,7 +33,7 @@ class PiecesView:
             return JsonResponse({'status': status})
 
     @csrf_exempt
-    def delete(self, id=None):
+    def delete(self, request, id=None):
         try:
             if id:
                 Pieces.objects.get(id=id).delete()
